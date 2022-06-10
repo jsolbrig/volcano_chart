@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "volcano.name" . }}-scheduler
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/component: scheduler
+    {{- include "volcano.labels" . | indent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: scheduler
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: scheduler
+        {{- include "volcano.labels" . | indent 8 }}
+    spec:
+      containers:
+      - args:
+        - --logtostderr
+        - --scheduler-conf=/volcano.scheduler/volcano-scheduler.conf
+        - --enable-healthz=true
+        - --enable-metrics=true
+        - -v=3
+        - 2>&1
+        {{- with .Values.scheduler.image }}
+        image: "{{- if .registry -}}{{ .registry }}/{{- end -}}{{ .repository }}{{- if ((.digest)) -}} @{{ .digest }}{{- else -}}:{{ default $.Chart.AppVersion .tag }} {{- end -}}"
+        imagePullPolicy: {{ .pullPolicy | default "IfNotPresent" }}
+        {{- end }}
+        name: {{ include "volcano.name" . }}-scheduler
+        volumeMounts:
+        - mountPath: /volcano.scheduler
+          name: scheduler-config
+      priorityClassName: system-cluster-critical
+      serviceAccount: volcano-scheduler
+      volumes:
+      - configMap:
+          name: {{ include "volcano.name" . }}-scheduler
+        name: scheduler-config

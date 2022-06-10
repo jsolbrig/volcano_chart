@@ -1,0 +1,38 @@
+# nameOverride:  # Overrides the default app name
+# fullnameOverride:  # Overrides the default fully qualified app name
+# commonLabels:  # Extra labels to apply to all chart resources
+
+webhookManager:
+  image: 
+    registry: wolf.cira.colostate.edu:444
+    repository: volcanosh/vc-webhook-manager
+    tag: 5cfe62d01d27a5b6482ae6a9458b9451b7e5bc3e
+    pullPolicy: IfNotPresent
+  managedNamespaces:
+    - 'volcano'
+  # ignoredNamespaces:  # a list of namespaces to be ingored by the webhook-manager
+  #   - 'argocd'
+  #   - 'binderhub'
+  #   - 'cert-manager'
+  #   - 'default'
+  #   - 'ingress-nginx'
+  #   - 'jupyterhub'
+  #   - 'kube-node-lease'
+  #   - 'kube-public'
+  #   - 'kube-system'
+  #   - 'longhorn-system'
+  #   - 'monitoring'
+
+controllers:
+  image: 
+    registry: wolf.cira.colostate.edu:444
+    repository: volcanosh/vc-controller-manager
+    tag: 5cfe62d01d27a5b6482ae6a9458b9451b7e5bc3e
+    pullPolicy: IfNotPresent
+
+scheduler:
+  image: 
+    registry: wolf.cira.colostate.edu:444
+    repository: volcanosh/vc-scheduler
+    tag: 5cfe62d01d27a5b6482ae6a9458b9451b7e5bc3e
+    pullPolicy: IfNotPresent

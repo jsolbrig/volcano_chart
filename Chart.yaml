@@ -1,0 +1,15 @@
+apiVersion: v2
+name: volcano
+version: 0.1.0
+appVersion: 1.6.0-devel
+type: application
+keywords:
+  - batch
+  - queue
+home: https://volcano.sh
+sources:
+  - https://github.com/volcano-sh/volcano
+maintainers:
+  - name: Jeremy Solbrig
+    email: jeremy.solbrig@colostate.edu
+icon: https://volcano.sh/img/volcano_logo.png

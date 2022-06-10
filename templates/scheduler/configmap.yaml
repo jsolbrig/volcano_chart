@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "volcano.name" . }}-scheduler
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "volcano.labels" . | indent 4 }}
+data:
+  volcano-scheduler.conf: "actions: \"enqueue, allocate, backfill\"\ntiers:\n- plugins:\n\
+    \  - name: priority\n  - name: gang\n  - name: conformance\n- plugins:\n  - name:\
+    \ overcommit\n  - name: drf\n  - name: predicates\n  - name: proportion\n  - name:\
+    \ nodeorder\n  - name: binpack\n"

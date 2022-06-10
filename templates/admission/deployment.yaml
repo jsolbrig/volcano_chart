@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "volcano.name" . }}-admission
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/component: admission
+    {{- include "volcano.labels" . | indent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: admission
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: admission
+        {{- include "volcano.labels" . | indent 8 }}
+    spec:
+      containers:
+      - args:
+        - --tls-cert-file=/admission.local.config/certificates/tls.crt
+        - --tls-private-key-file=/admission.local.config/certificates/tls.key
+        - --ca-cert-file=/admission.local.config/certificates/ca.crt
+        - --admission-conf=/admission.local.config/configmap/volcano-admission.conf
+        - --webhook-namespace={{ .Release.Namespace }}
+        - --webhook-service-name={{ include "volcano.name" . }}-admission-service
+        {{- with .Values.webhookManager }}
+        {{- if .ignoredNamespaces }}
+        - --ignored-namespaces={{ $.Release.Namespace }},{{ $.Release.Namespace }}-system,{{- join "," .ignoredNamespaces }}
+        {{- else if .managedNamespaces }}
+        - --managed-namespaces={{- join "," .managedNamespaces }}
+        {{- else }}
+        - --ignored-namespaces={{ $.Release.Namespace }},{{ $.Release.Namespace }}-system
+        {{- end }}
+        {{- end }}
+        - --logtostderr
+        - --port=8443
+        - -v=4
+        - 2>&1
+        {{- with .Values.webhookManager.image }}
+        image: "{{- if .registry -}}{{ .registry }}/{{- end -}}{{ .repository }}{{- if ((.digest)) -}} @{{ .digest }}{{- else -}}:{{ default $.Chart.AppVersion .tag }} {{- end -}}"
+        imagePullPolicy: {{ .pullPolicy | default "IfNotPresent" }}
+        {{- end }}
+        name: admission
+        volumeMounts:
+        - mountPath: /admission.local.config/certificates
+          name: admission-certs
+          readOnly: true
+        - mountPath: /admission.local.config/configmap
+          name: admission-config
+      priorityClassName: system-cluster-critical
+      serviceAccount: {{ include "volcano.name" . }}-admission
+      volumes:
+      - name: admission-certs
+        secret:
+          defaultMode: 420
+          secretName: {{ include "volcano.name" . }}-admission
+      - configMap:
+          name: {{ include "volcano.name" . }}-admission
+        name: admission-config

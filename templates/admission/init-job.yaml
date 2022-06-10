@@ -1,0 +1,29 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "volcano.name" . }}-admission-init
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/component: admission-init
+    {{- include "volcano.labels" . | indent 4 }}
+spec:
+  backoffLimit: 3
+  template:
+    spec:
+      containers:
+      - command:
+        - ./gen-admission-secret.sh
+        - --service
+        - {{ include "volcano.name" . }}-admission
+        - --namespace
+        - {{ .Release.Namespace }}
+        - --secret
+        - {{ include "volcano.name" . }}-admission
+        {{- with .Values.webhookManager.image }}
+        image: "{{- if .registry -}}{{ .registry }}/{{- end -}}{{ .repository }}{{- if ((.digest)) -}} @{{ .digest }}{{- else -}}:{{ default $.Chart.AppVersion .tag }} {{- end -}}"
+        imagePullPolicy: {{ .pullPolicy | default "IfNotPresent" }}
+        {{- end }}
+        name: main
+      priorityClassName: system-cluster-critical
+      restartPolicy: Never
+      serviceAccountName: {{ include "volcano.name" . }}-admission
