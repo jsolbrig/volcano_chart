@@ -6,13 +6,12 @@ webhookManager:
   image: 
     registry: wolf.cira.colostate.edu:444
     repository: volcanosh/vc-webhook-manager
-    tag: 5cfe62d01d27a5b6482ae6a9458b9451b7e5bc3e
-    pullPolicy: IfNotPresent
-  managedNamespaces:
-    - 'volcano'
+    tag: v1.5.1
+    pullPolicy: Always
+  # managedNamespaces:
+  #   - 'volcano'
   # ignoredNamespaces:  # a list of namespaces to be ingored by the webhook-manager
   #   - 'argocd'
-  #   - 'binderhub'
   #   - 'cert-manager'
   #   - 'default'
   #   - 'ingress-nginx'
@@ -27,12 +26,12 @@ controllers:
   image: 
     registry: wolf.cira.colostate.edu:444
     repository: volcanosh/vc-controller-manager
-    tag: 5cfe62d01d27a5b6482ae6a9458b9451b7e5bc3e
-    pullPolicy: IfNotPresent
+    tag: v1.5.1
+    pullPolicy: Always
 
 scheduler:
   image: 
     registry: wolf.cira.colostate.edu:444
     repository: volcanosh/vc-scheduler
-    tag: 5cfe62d01d27a5b6482ae6a9458b9451b7e5bc3e
-    pullPolicy: IfNotPresent
+    tag: v1.5.1
+    pullPolicy: Always

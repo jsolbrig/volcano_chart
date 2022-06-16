@@ -2,11 +2,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "volcano.name" . }}-controllers
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ .Release.Namespace }}-system
   labels:
     app.kubernetes.io/component: controller
     {{- include "volcano.labels" . | indent 4 }}
-  namespace: volcano-system
 spec:
   replicas: 1
   selector:

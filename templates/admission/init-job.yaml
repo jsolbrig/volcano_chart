@@ -2,7 +2,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: {{ include "volcano.name" . }}-admission-init
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ .Release.Namespace }}-system
   labels:
     app.kubernetes.io/component: admission-init
     {{- include "volcano.labels" . | indent 4 }}
@@ -16,7 +16,7 @@ spec:
         - --service
         - {{ include "volcano.name" . }}-admission
         - --namespace
-        - {{ .Release.Namespace }}
+        - {{ .Release.Namespace }}-system
         - --secret
         - {{ include "volcano.name" . }}-admission
         {{- with .Values.webhookManager.image }}
