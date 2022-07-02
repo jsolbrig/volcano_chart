@@ -37,5 +37,6 @@ Session.vim
 # Personal habits
 *.out
 *.log
+template.yaml
 
 .history
