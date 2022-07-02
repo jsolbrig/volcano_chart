@@ -40,3 +40,30 @@ heritage: {{ $.Release.Service | quote }}
 {{ toYaml .Values.commonLabels }}
 {{- end }}
 {{- end }}
+
+{{/* Generate image */}}
+{{- define "volcano.image" }}
+
+{{- $image := "" }}
+
+{{- if .registry }}
+{{- $image = printf "%s/%s" .registry .repository }}
+{{- else }}
+{{- $image = .repository }}
+{{- end }}
+
+{{- printf "%s" $image }}
+{{- end }}
+
+{{/* Generate image tags */}}
+{{- define "volcano.imageTag" }}
+{{- $imageTag := "" }}
+
+{{- if .digest }}
+{{- $imageTag = printf "%s@%s" $imageTag .digest }}
+{{- else if .tag }}
+{{- $imageTag = printf "%s:%s" $imageTag .tag }}
+{{- end }}
+
+{{- printf "%s" $imageTag }}
+{{- end }}
