@@ -2,12 +2,25 @@
 # fullnameOverride:  # Overrides the default fully qualified app name
 # commonLabels:  # Extra labels to apply to all chart resources
 
+# Configure one or more Queues
+queues:
+#   - name: volcano
+#     weight: 1
+#     capability:
+#       cpu: 2
+
+# Configure the webhook manager
 webhookManager:
   image: 
-    registry: wolf.cira.colostate.edu:444
+    # Use a custom image registry, not docker hub
+    # registry: wolf.cira.colostate.edu:444
+    registry:
+    # The image repository
     repository: volcanosh/vc-webhook-manager
-    tag: v1.5.1
-    pullPolicy: Always
+    # The image tag (defaults to the application version in Chart.yaml)
+    tag:
+    pullPolicy: IfNotPresent
+  # Maybe later, after I've dealt with the issue in github
   # managedNamespaces:
   #   - 'volcano'
   # ignoredNamespaces:  # a list of namespaces to be ingored by the webhook-manager
@@ -22,16 +35,26 @@ webhookManager:
   #   - 'longhorn-system'
   #   - 'monitoring'
 
+# Configure the controllers
 controllers:
-  image: 
-    registry: wolf.cira.colostate.edu:444
+  image:
+    # Use a custom image registry, not docker hub
+    # registry: wolf.cira.colostate.edu:444
+    registry:
+    # The image repository
     repository: volcanosh/vc-controller-manager
-    tag: v1.5.1
-    pullPolicy: Always
+    # The image tag (defaults to the application version in Chart.yaml)
+    tag:
+    pullPolicy: IfNotPresent
 
+# Configure the scheduler
 scheduler:
-  image: 
-    registry: wolf.cira.colostate.edu:444
+  image:
+    # Use a custom image registry, not docker hub
+    # registry: wolf.cira.colostate.edu:444
+    registry:
+    # The image repository
     repository: volcanosh/vc-scheduler
-    tag: v1.5.1
-    pullPolicy: Always
+    # The image tag (defaults to the application version in Chart.yaml)
+    tag:
+    pullPolicy: IfNotPresent

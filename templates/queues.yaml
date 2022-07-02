@@ -1,0 +1,18 @@
+{{- range .Values.queues }}
+---
+apiVersion: scheduling.volcano.sh/v1beta1
+kind: Queue
+metadata:
+  name: {{ .name }}
+  labels:
+    app.kubernetes.io/component: queues
+    {{- include "volcano.labels" $ | indent 4 }}
+spec:
+  weight: {{ .weight }}
+  reclaimable: {{ .reclaimable | default false }}
+  capability:
+    cpu: {{ .capability.cpu }}
+    {{- if .capability.ram }} 
+    ram: {{ .capability.ram }}
+    {{- end }}
+{{- end }}
