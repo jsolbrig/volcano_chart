@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "volcano.name" . }}-scheduler
-  namespace: {{ .Release.Namespace }}-system
+  namespace: {{ .Release.Namespace }}
   labels:
     app.kubernetes.io/component: scheduler
     {{- include "volcano.labels" . | indent 4 }}
