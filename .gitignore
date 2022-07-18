@@ -38,5 +38,6 @@ Session.vim
 *.out
 *.log
 template.yaml
+*.tgz
 
 .history

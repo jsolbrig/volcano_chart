@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "volcano.name" . }}-admission
-  namespace: {{ .Release.Namespace }}-system
+  namespace: {{ .Release.Namespace }}
   labels:
     app.kubernetes.io/component: admission
     {{- include "volcano.labels" . | indent 4 }}
@@ -24,15 +24,15 @@ spec:
         - --tls-private-key-file=/admission.local.config/certificates/tls.key
         - --ca-cert-file=/admission.local.config/certificates/ca.crt
         - --admission-conf=/admission.local.config/configmap/volcano-admission.conf
-        - --webhook-namespace={{ .Release.Namespace }}-system
+        - --webhook-namespace={{ .Release.Namespace }}
         - --webhook-service-name={{ include "volcano.name" . }}-admission
         {{- with .Values.webhookManager }}
         {{- if .ignoredNamespaces }}
-        # - --ignored-namespaces={{ $.Release.Namespace }},{{ $.Release.Namespace }}-system,{{- join "," .ignoredNamespaces }}
+        # - --ignored-namespaces={{ $.Release.Namespace }},{{- join "," .ignoredNamespaces }}
         {{- else if .managedNamespaces }}
         # - --managed-namespaces={{- join "," .managedNamespaces }}
         {{- else }}
-        # - --ignored-namespaces={{ $.Release.Namespace }},{{ $.Release.Namespace }}-system
+        # - --ignored-namespaces={{ $.Release.Namespace }}
         {{- end }}
         {{- end }}
         - --logtostderr
